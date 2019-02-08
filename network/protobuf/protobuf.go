@@ -41,12 +41,12 @@ func NewProcessor() *Processor {
 	return p
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetByteOrder; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetByteOrder(littleEndian bool) {
 	p.littleEndian = littleEndian
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// Register; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) Register(msg proto.Message) uint16 {
 	msgType := reflect.TypeOf(msg)
 	if msgType == nil || msgType.Kind() != reflect.Ptr {
@@ -67,7 +67,7 @@ func (p *Processor) Register(msg proto.Message) uint16 {
 	return id
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetRouter; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetRouter(msg proto.Message, msgRouter *chanrpc.Server) {
 	msgType := reflect.TypeOf(msg)
 	id, ok := p.msgID[msgType]
@@ -78,7 +78,7 @@ func (p *Processor) SetRouter(msg proto.Message, msgRouter *chanrpc.Server) {
 	p.msgInfo[id].msgRouter = msgRouter
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetHandler; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetHandler(msg proto.Message, msgHandler MsgHandler) {
 	msgType := reflect.TypeOf(msg)
 	id, ok := p.msgID[msgType]
@@ -89,7 +89,7 @@ func (p *Processor) SetHandler(msg proto.Message, msgHandler MsgHandler) {
 	p.msgInfo[id].msgHandler = msgHandler
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetRawHandler; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetRawHandler(id uint16, msgRawHandler MsgHandler) {
 	if id >= uint16(len(p.msgInfo)) {
 		log.Fatal("message id %v not registered", id)
@@ -98,7 +98,7 @@ func (p *Processor) SetRawHandler(id uint16, msgRawHandler MsgHandler) {
 	p.msgInfo[id].msgRawHandler = msgRawHandler
 }
 
-// goroutine safe
+// Route; goroutine safe
 func (p *Processor) Route(msg interface{}, userData interface{}) error {
 	// raw
 	if msgRaw, ok := msg.(MsgRaw); ok {
@@ -128,7 +128,7 @@ func (p *Processor) Route(msg interface{}, userData interface{}) error {
 	return nil
 }
 
-// goroutine safe
+// Unmarshal; goroutine safe
 func (p *Processor) Unmarshal(data []byte) (interface{}, error) {
 	if len(data) < 2 {
 		return nil, errors.New("protobuf data too short")
@@ -155,7 +155,7 @@ func (p *Processor) Unmarshal(data []byte) (interface{}, error) {
 	}
 }
 
-// goroutine safe
+// Marshal; goroutine safe
 func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
 	msgType := reflect.TypeOf(msg)
 
@@ -178,7 +178,7 @@ func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
 	return [][]byte{id, data}, err
 }
 
-// goroutine safe
+// Range; goroutine safe
 func (p *Processor) Range(f func(id uint16, t reflect.Type)) {
 	for id, i := range p.msgInfo {
 		f(uint16(id), i.msgType)

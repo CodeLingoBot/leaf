@@ -81,7 +81,7 @@ func New(strLevel string, pathname string, flag int) (*Logger, error) {
 	return logger, nil
 }
 
-// It's dangerous to call the method on logging
+// Close; It's dangerous to call the method on logging
 func (logger *Logger) Close() {
 	if logger.baseFile != nil {
 		logger.baseFile.Close()
@@ -125,7 +125,7 @@ func (logger *Logger) Fatal(format string, a ...interface{}) {
 
 var gLogger, _ = New("debug", "", log.LstdFlags)
 
-// It's dangerous to call the method on logging
+// Export; It's dangerous to call the method on logging
 func Export(logger *Logger) {
 	if logger != nil {
 		gLogger = logger

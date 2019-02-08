@@ -58,7 +58,7 @@ func (c *ExternalCommand) run(_args []string) string {
 	return output
 }
 
-// you must call the function before calling console.Init
+// Register; you must call the function before calling console.Init
 // goroutine not safe
 func Register(name string, help string, f interface{}, server *chanrpc.Server) {
 	for _, c := range commands {

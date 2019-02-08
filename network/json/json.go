@@ -33,7 +33,7 @@ func NewProcessor() *Processor {
 	return p
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// Register; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) Register(msg interface{}) string {
 	msgType := reflect.TypeOf(msg)
 	if msgType == nil || msgType.Kind() != reflect.Ptr {
@@ -53,7 +53,7 @@ func (p *Processor) Register(msg interface{}) string {
 	return msgID
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetRouter; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetRouter(msg interface{}, msgRouter *chanrpc.Server) {
 	msgType := reflect.TypeOf(msg)
 	if msgType == nil || msgType.Kind() != reflect.Ptr {
@@ -68,7 +68,7 @@ func (p *Processor) SetRouter(msg interface{}, msgRouter *chanrpc.Server) {
 	i.msgRouter = msgRouter
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetHandler; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetHandler(msg interface{}, msgHandler MsgHandler) {
 	msgType := reflect.TypeOf(msg)
 	if msgType == nil || msgType.Kind() != reflect.Ptr {
@@ -83,7 +83,7 @@ func (p *Processor) SetHandler(msg interface{}, msgHandler MsgHandler) {
 	i.msgHandler = msgHandler
 }
 
-// It's dangerous to call the method on routing or marshaling (unmarshaling)
+// SetRawHandler; It's dangerous to call the method on routing or marshaling (unmarshaling)
 func (p *Processor) SetRawHandler(msgID string, msgRawHandler MsgHandler) {
 	i, ok := p.msgInfo[msgID]
 	if !ok {
@@ -93,7 +93,7 @@ func (p *Processor) SetRawHandler(msgID string, msgRawHandler MsgHandler) {
 	i.msgRawHandler = msgRawHandler
 }
 
-// goroutine safe
+// Route; goroutine safe
 func (p *Processor) Route(msg interface{}, userData interface{}) error {
 	// raw
 	if msgRaw, ok := msg.(MsgRaw); ok {
@@ -126,7 +126,7 @@ func (p *Processor) Route(msg interface{}, userData interface{}) error {
 	return nil
 }
 
-// goroutine safe
+// Unmarshal; goroutine safe
 func (p *Processor) Unmarshal(data []byte) (interface{}, error) {
 	var m map[string]json.RawMessage
 	err := json.Unmarshal(data, &m)
@@ -155,7 +155,7 @@ func (p *Processor) Unmarshal(data []byte) (interface{}, error) {
 	panic("bug")
 }
 
-// goroutine safe
+// Marshal; goroutine safe
 func (p *Processor) Marshal(msg interface{}) ([][]byte, error) {
 	msgType := reflect.TypeOf(msg)
 	if msgType == nil || msgType.Kind() != reflect.Ptr {

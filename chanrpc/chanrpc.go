@@ -63,7 +63,7 @@ func assert(i interface{}) []interface{} {
 	}
 }
 
-// you must call the function before calling Open and Go
+// Register; you must call the function before calling Open and Go
 func (s *Server) Register(id interface{}, f interface{}) {
 	switch f.(type) {
 	case func([]interface{}):
@@ -134,7 +134,7 @@ func (s *Server) Exec(ci *CallInfo) {
 	}
 }
 
-// goroutine safe
+// Go; safe
 func (s *Server) Go(id interface{}, args ...interface{}) {
 	f := s.functions[id]
 	if f == nil {
@@ -151,17 +151,17 @@ func (s *Server) Go(id interface{}, args ...interface{}) {
 	}
 }
 
-// goroutine safe
+// Call0; goroutine safe
 func (s *Server) Call0(id interface{}, args ...interface{}) error {
 	return s.Open(0).Call0(id, args...)
 }
 
-// goroutine safe
+// Call1; goroutine safe
 func (s *Server) Call1(id interface{}, args ...interface{}) (interface{}, error) {
 	return s.Open(0).Call1(id, args...)
 }
 
-// goroutine safe
+// CallN; goroutine safe
 func (s *Server) CallN(id interface{}, args ...interface{}) ([]interface{}, error) {
 	return s.Open(0).CallN(id, args...)
 }
@@ -176,7 +176,7 @@ func (s *Server) Close() {
 	}
 }
 
-// goroutine safe
+// Open; goroutine safe
 func (s *Server) Open(l int) *Client {
 	c := NewClient(l)
 	c.Attach(s)

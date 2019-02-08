@@ -51,13 +51,13 @@ type DialContext struct {
 	sessions SessionHeap
 }
 
-// goroutine safe
+// Dial; goroutine safe
 func Dial(url string, sessionNum int) (*DialContext, error) {
 	c, err := DialWithTimeout(url, sessionNum, 10*time.Second, 5*time.Minute)
 	return c, err
 }
 
-// goroutine safe
+// DialWithTimeout; goroutine safe
 func DialWithTimeout(url string, sessionNum int, dialTimeout time.Duration, timeout time.Duration) (*DialContext, error) {
 	if sessionNum <= 0 {
 		sessionNum = 100
@@ -84,7 +84,7 @@ func DialWithTimeout(url string, sessionNum int, dialTimeout time.Duration, time
 	return c, nil
 }
 
-// goroutine safe
+// Close; goroutine safe
 func (c *DialContext) Close() {
 	c.Lock()
 	for _, s := range c.sessions {
@@ -96,7 +96,7 @@ func (c *DialContext) Close() {
 	c.Unlock()
 }
 
-// goroutine safe
+// Ref; goroutine safe
 func (c *DialContext) Ref() *Session {
 	c.Lock()
 	s := c.sessions[0]
@@ -110,7 +110,7 @@ func (c *DialContext) Ref() *Session {
 	return s
 }
 
-// goroutine safe
+// UnRef; goroutine safe
 func (c *DialContext) UnRef(s *Session) {
 	c.Lock()
 	s.ref--
@@ -118,7 +118,7 @@ func (c *DialContext) UnRef(s *Session) {
 	c.Unlock()
 }
 
-// goroutine safe
+// EnsureCounter; goroutine safe
 func (c *DialContext) EnsureCounter(db string, collection string, id string) error {
 	s := c.Ref()
 	defer c.UnRef(s)
@@ -134,7 +134,7 @@ func (c *DialContext) EnsureCounter(db string, collection string, id string) err
 	}
 }
 
-// goroutine safe
+// NextSeq; goroutine safe
 func (c *DialContext) NextSeq(db string, collection string, id string) (int, error) {
 	s := c.Ref()
 	defer c.UnRef(s)
@@ -150,7 +150,7 @@ func (c *DialContext) NextSeq(db string, collection string, id string) (int, err
 	return res.Seq, err
 }
 
-// goroutine safe
+// EnsureIndex; goroutine safe
 func (c *DialContext) EnsureIndex(db string, collection string, key []string) error {
 	s := c.Ref()
 	defer c.UnRef(s)
@@ -162,7 +162,7 @@ func (c *DialContext) EnsureIndex(db string, collection string, key []string) er
 	})
 }
 
-// goroutine safe
+// EnsureUniqueIndex; goroutine safe
 func (c *DialContext) EnsureUniqueIndex(db string, collection string, key []string) error {
 	s := c.Ref()
 	defer c.UnRef(s)
